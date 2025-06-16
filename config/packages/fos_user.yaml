@@ -1,0 +1,12 @@
+fos_user:
+  db_driver: orm
+  firewall_name: main
+  user_class: App\Entity\User
+  from_email:
+    address: "admin@task-management.com"
+    sender_name: "Task Management"
+  registration:
+    confirmation:
+      enabled: false
+  service:
+    mailer: App\Service\CustomMailer

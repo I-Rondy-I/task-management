@@ -1,0 +1,47 @@
+nelmio_api_doc:
+  documentation:
+    openapi: 3.1.0
+    info:
+      title: Task Management API
+      version: 1.0.0
+    components:
+      schemas:
+        Task:
+          type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+            title:
+              type: string
+            description:
+              type: string
+            deadline:
+              type: string
+              format: date-time
+            status:
+              type: string
+              enum: [pending, completed, rejected]
+            subtasks:
+              type: array
+              items:
+                $ref: '#/components/schemas/Task'
+        TaskDTO:
+          type: object
+          properties:
+            title:
+              type: string
+            description:
+              type: string
+            deadline:
+              type: string
+              format: date-time
+            status:
+              type: string
+              enum: [pending, completed, rejected]
+            parentTaskId:
+              type: string
+              format: uuid
+              nullable: true
+  areas:
+    path_patterns: [ ^/api ]

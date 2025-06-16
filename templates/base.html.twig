@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Task Management</title>
+    <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="{{ path('task_index') }}">Task Management</a>
+    <div class="navbar-nav">
+        <a class="nav-link" href="{{ path('task_index') }}">Tasks</a>
+        <a class="nav-link" href="{{ path('task_kanban') }}">Kanban</a>
+        <a class="nav-link" href="{{ path('fos_user_security_logout') }}">Logout</a>
+    </div>
+</nav>
+<div class="container">
+    {% block body %}{% endblock %}
+</div>
+<script src="{{ asset('js/bootstrap.min.js') }}"></script>
+<script src="{{ asset('js/sortable.js') }}"></script>
+<script src="{{ asset('js/kanban.js') }}"></script>
+</body>
+</html>

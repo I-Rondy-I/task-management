@@ -1,0 +1,27 @@
+security:
+  enable_authenticator_manager: true
+  password_hashers:
+    App\Entity\User:
+      algorithm: auto
+  providers:
+    fos_userbundle:
+      id: fos_user.user_provider.username
+  firewalls:
+    main:
+      pattern: ^/
+      entry_point: form_login
+      form_login:
+        provider: fos_userbundle
+        login_path: fos_user_security_login
+        check_path: fos_user_security_check
+        default_target_path: task_index
+        csrf_token_generator: security.csrf.token_manager
+      logout:
+        path: fos_user_security_logout
+        target: fos_user_security_login
+      custom_authenticators:
+        - App\Security\LoginFormAuthenticator
+  access_control:
+    - { path: ^/login, roles: PUBLIC_ACCESS }
+    - { path: ^/register, roles: PUBLIC_ACCESS }
+    - { path: ^/, roles: ROLE_ADMIN }

@@ -1,0 +1,64 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-4">
+            <h3>Pending</h3>
+            <div class="kanban-column" data-status="pending">
+                {% for task in pending %}
+                    <div class="card task-card" data-id="{{ task.id }}">
+                        <div class="card-body">
+                            <h5>{{ task.title }}</h5>
+                            <p>{{ task.description|slice(0, 50) }}...</p>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="col-md-4">
+            <h3>Completed</h3>
+            <div class="kanban-column" data-status="completed">
+                {% for task in completed %}
+                    <div class="card task-card" data-id="{{ task.id }}">
+                        <div class="card-body">
+                            <h5>{{ task.title }}</h5>
+                            <p>{{ task.description|slice(0, 50) }}...</p>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="col-md-4">
+            <h3>Rejected</h3>
+            <div class="kanban-column" data-status="rejected">
+                {% for task in rejected %}
+                    <div class="card task-card" data-id="{{ task.id }}">
+                        <div class="card-body">
+                            <h5>{{ task.title }}</h5>
+                            <p>{{ task.description|slice(0, 50) }}...</p>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.querySelectorAll('.kanban-column').forEach(column => {
+            new Sortable(column, {
+                group: 'kanban',
+                animation: 150,
+                onEnd: function(evt) {
+                    const taskId = evt.item.dataset.id;
+                    const newStatus = evt.to.dataset.status;
+
+                    fetch(`/tasks/${taskId}/status`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                        body: `status=${newStatus}`
+                    });
+                }
+            });
+        });
+    </script>
+{% endblock %}

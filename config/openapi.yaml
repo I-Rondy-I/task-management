@@ -1,0 +1,106 @@
+openapi: 3.1.0  # Обновляем до 3.1
+info:
+  title: Task Management API
+  version: 1.0.0
+paths:
+  /api/tasks:
+    get:
+      summary: Получить список всех задач
+      tags: [Tasks]
+      responses:
+        '200':
+          description: Список задач
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Task'
+    post:
+      summary: Создать новую задачу
+      tags: [Tasks]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskDTO'
+      responses:
+        '201':
+          description: Задача создана
+  /api/tasks/{id}:
+    get:
+      summary: Получить детали задачи
+      tags: [Tasks]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Детали задачи
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+        '404':
+          description: Задача не найдена
+    put:
+      summary: Обновить задачу
+      tags: [Tasks]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskDTO'
+      responses:
+        '200':
+          description: Задача обновлена
+components:
+  schemas:
+    Task:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        description:
+          type: string
+        deadline:
+          type: string
+          format: date-time
+        status:
+          type: string
+          enum: [pending, completed, rejected]
+        subtasks:
+          type: array
+          items:
+            $ref: '#/components/schemas/Task'
+    TaskDTO:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        deadline:
+          type: string
+          format: date-time
+        status:
+          type: string
+          enum: [pending, completed, rejected]
+        parentTaskId:
+          type: string
+          format: uuid
+          nullable: true

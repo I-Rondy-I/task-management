@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="6ed879d3-10b0-4306-90dc-c2064afeb0e6" name="dev.autowave.site">
+        <fileTransfer rootFolder="/home" accessType="SFTP" host="dev.autowave.site" port="22" sshConfigId="56ce426b-9cd3-4993-b0d7-188211e73ac4" sshConfig="root@dev.autowave.site:22 password">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

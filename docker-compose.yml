@@ -1,0 +1,40 @@
+version: "3.8"
+
+services:
+  php:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8022:8022"
+    volumes:
+      - .:/app
+    depends_on:
+      - mariadb
+    environment:
+      - DATABASE_URL=mysql://admin:admin@mariadb:3306/task_management
+      - MAILER_DSN=smtp://8d5c7506021563:d04ba76cb268ae@sandbox.smtp.mailtrap.io:587?encryption=tls&auth_mode=login
+    command: >
+      sh -c "
+        until nc -z mariadb 3306; do
+          echo 'Waiting for MariaDB...'; sleep 2;
+        done && sleep 5 &&
+        composer install --no-interaction --optimize-autoloader --no-scripts --ignore-platform-reqs &&
+        php bin/console doctrine:migrations:migrate --no-interaction &&
+        php -S 0.0.0.0:8022 -t public
+      "
+
+  mariadb:
+    image: mariadb:latest
+    ports:
+      - "8033:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=admin
+      - MYSQL_DATABASE=task_management
+      - MYSQL_USER=admin
+      - MYSQL_PASSWORD=admin
+    volumes:
+      - mariadb_data:/var/lib/mysql
+
+volumes:
+  mariadb_data:
