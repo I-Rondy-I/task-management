@@ -1,28 +1,32 @@
 <?php
 namespace App\Tests\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use App\Entity\User;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 class TaskControllerTest extends WebTestCase
 {
+    private $client;
+
+    protected function setUp(): void
+    {
+        $this->client = static::createClient();
+        $this->client->loginUser($this->createMockUser());
+    }
+
     public function testIndex(): void
     {
-        $client = static::createClient();
-        $client->loginUser($this->createMockUser());
-        $client->request('GET', '/tasks');
-
+        $this->client->request('GET', '/tasks');
         $this->assertResponseIsSuccessful();
+        $this->assertSelectorTextContains('h1', 'Task Management');
     }
 
     public function testCreateTask(): void
     {
-        $client = static::createClient();
-        $client->loginUser($this->createMockUser());
-        $client->request('GET', '/tasks/create');
-
+        $this->client->request('GET', '/tasks/create');
         $this->assertResponseIsSuccessful();
+        $this->assertSelectorExists('form');
     }
 
     private function createMockUser(): UserInterface

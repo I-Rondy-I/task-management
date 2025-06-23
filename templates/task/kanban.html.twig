@@ -1,62 +1,107 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}Kanban table{% endblock %}
+
 {% block body %}
-    <div class="row">
-        <div class="col-md-4">
-            <h3>Pending</h3>
-            <div class="kanban-column" data-status="pending">
-                {% for task in pending %}
-                    <div class="card task-card" data-id="{{ task.id }}">
-                        <div class="card-body">
-                            <h5>{{ task.title }}</h5>
-                            <p>{{ task.description|slice(0, 50) }}...</p>
+    <div class="container mt-5">
+        <h2>Kanban table</h2>
+        <div class="row">
+            <div class="col-md-4">
+                <h3>Pending</h3>
+                <div class="card task-list" id="pending" data-status="pending">
+                    {% for task in pending %}
+                        <div class="card mb-2 task-card" data-task-id="{{ task.id.toString }}">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ task.title }}</h5>
+                                <p class="card-text">{{ task.description }}</p>
+                                <p>Deadline: {{ task.deadline|date('Y-m-d H:i') }}</p>
+                                <p>Debug ID: {{ task.id.toString }}</p>
+                            </div>
                         </div>
-                    </div>
-                {% endfor %}
+                    {% else %}
+                        <p>No tasks pending.</p>
+                    {% endfor %}
+                </div>
             </div>
-        </div>
-        <div class="col-md-4">
-            <h3>Completed</h3>
-            <div class="kanban-column" data-status="completed">
-                {% for task in completed %}
-                    <div class="card task-card" data-id="{{ task.id }}">
-                        <div class="card-body">
-                            <h5>{{ task.title }}</h5>
-                            <p>{{ task.description|slice(0, 50) }}...</p>
+            <div class="col-md-4">
+                <h3>Completed</h3>
+                <div class="card task-list" id="completed" data-status="completed">
+                    {% for task in completed %}
+                        <div class="card mb-2 task-card" data-task-id="{{ task.id.toString }}">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ task.title }}</h5>
+                                <p class="card-text">{{ task.description }}</p>
+                                <p>Deadline: {{ task.deadline|date('Y-m-d H:i') }}</p>
+                                <p>Debug ID: {{ task.id.toString }}</p>
+                            </div>
                         </div>
-                    </div>
-                {% endfor %}
+                    {% else %}
+                        <p>No completed tasks.</p>
+                    {% endfor %}
+                </div>
             </div>
-        </div>
-        <div class="col-md-4">
-            <h3>Rejected</h3>
-            <div class="kanban-column" data-status="rejected">
-                {% for task in rejected %}
-                    <div class="card task-card" data-id="{{ task.id }}">
-                        <div class="card-body">
-                            <h5>{{ task.title }}</h5>
-                            <p>{{ task.description|slice(0, 50) }}...</p>
+            <div class="col-md-4">
+                <h3>Rejected</h3>
+                <div class="card task-list" id="rejected" data-status="rejected">
+                    {% for task in rejected %}
+                        <div class="card mb-2 task-card" data-task-id="{{ task.id.toString }}">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ task.title }}</h5>
+                                <p class="card-text">{{ task.description }}</p>
+                                <p>Termin: {{ task.deadline|date('Y-m-d H:i') }}</p>
+                                <p>Debug ID: {{ task.id.toString }}</p>
+                            </div>
                         </div>
-                    </div>
-                {% endfor %}
+                    {% else %}
+                        <p>No rejected tasks.</p>
+                    {% endfor %}
+                </div>
             </div>
         </div>
     </div>
+{% endblock %}
 
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
     <script>
-        document.querySelectorAll('.kanban-column').forEach(column => {
-            new Sortable(column, {
-                group: 'kanban',
+        document.querySelectorAll('.task-list').forEach(list => {
+            new Sortable(list, {
+                group: 'tasks',
                 animation: 150,
+                draggable: '.task-card',
                 onEnd: function(evt) {
-                    const taskId = evt.item.dataset.id;
-                    const newStatus = evt.to.dataset.status;
+                    const taskId = evt.item.getAttribute('data-task-id');
+                    const newStatus = evt.to.getAttribute('data-status');
+                    console.log('Sending request for task ID:', taskId, 'with status:', newStatus);
 
                     fetch(`/tasks/${taskId}/status`, {
                         method: 'POST',
-                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
                         body: `status=${newStatus}`
-                    });
+                    })
+                        .then(response => {
+                            console.log('Response status:', response.status);
+                            if (!response.ok) {
+                                throw new Error('Error HTTP: ' + response.status);
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            console.log('Response data:', data);
+                            if (data.status === 'success') {
+                                window.location.reload();
+                            } else {
+                                alert('Error: ' + data.message);
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Fetch error:', error);
+                            alert('An error occurred while updating the status.');
+                        });
                 }
             });
         });

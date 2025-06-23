@@ -11,3 +11,10 @@ nelmio_api_doc:
 fos_user:
     resource: '@FOSUserBundle/Resources/config/routing/all.xml'
     type: xml
+
+task_update_status:
+    path: /tasks/{id}/status
+    controller: App\Controller\TaskController::updateStatus
+    methods: [POST]
+    requirements:
+        id: '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'

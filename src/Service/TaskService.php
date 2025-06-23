@@ -2,19 +2,23 @@
 namespace App\Service;
 
 use App\Entity\Task;
+use App\Enum\TaskStatus;
 use App\Repository\TaskRepository;
 use App\DTO\TaskDTO;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 
 class TaskService
 {
     private $taskRepository;
     private $entityManager;
+    private $logger;
 
-    public function __construct(TaskRepository $taskRepository, EntityManagerInterface $entityManager)
+    public function __construct(TaskRepository $taskRepository, EntityManagerInterface $entityManager, LoggerInterface $logger)
     {
         $this->taskRepository = $taskRepository;
         $this->entityManager = $entityManager;
+        $this->logger = $logger;
     }
 
     public function createTask(TaskDTO $dto): Task
@@ -55,11 +59,17 @@ class TaskService
         return $task;
     }
 
-    public function updateTaskStatus(Task $task, string $status): Task
+    public function updateTaskStatus(Task $task, string $status): void
     {
+        $validStatuses = ['pending', 'completed', 'rejected'];
+        if (!in_array($status, $validStatuses)) {
+            $this->logger->error('Invalid status: ' . $status);
+            throw new \InvalidArgumentException('Incorrect status: ' . $status);
+        }
+
+        $this->logger->info('Updating task status to: ' . $status);
         $task->setStatus(TaskStatus::from($status));
         $this->entityManager->flush();
-
-        return $task;
+        $this->logger->info('Task status updated successfully');
     }
 }

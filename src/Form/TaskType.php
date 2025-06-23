@@ -16,11 +16,25 @@ class TaskType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('title', TextType::class)
-            ->add('description', TextareaType::class)
-            ->add('deadline', DateTimeType::class, ['widget' => 'single_text'])
-            ->add('status', EnumType::class, ['class' => TaskStatus::class])
-            ->add('parentTaskId', TextType::class, ['required' => false]);
+            ->add('title', TextType::class, [
+                'label' => 'Tytuł',
+            ])
+            ->add('description', TextareaType::class, [
+                'label' => 'Opis',
+            ])
+            ->add('deadline', DateTimeType::class, [
+                'label' => 'Termin',
+                'widget' => 'single_text',
+            ])
+            ->add('status', EnumType::class, [
+                'label' => 'Status',
+                'class' => TaskStatus::class,
+                'choice_label' => fn(TaskStatus $status) => $status->value,
+            ])
+            ->add('parentTaskId', TextType::class, [
+                'label' => 'ID zadania nadrzędnego',
+                'required' => false,
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

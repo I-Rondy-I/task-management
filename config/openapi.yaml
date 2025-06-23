@@ -5,11 +5,11 @@ info:
 paths:
   /api/tasks:
     get:
-      summary: Получить список всех задач
+      summary: Get list of all tasks
       tags: [Tasks]
       responses:
         '200':
-          description: Список задач
+          description: List of tasks
           content:
             application/json:
               schema:
@@ -17,7 +17,7 @@ paths:
                 items:
                   $ref: '#/components/schemas/Task'
     post:
-      summary: Создать новую задачу
+      summary: Create new task
       tags: [Tasks]
       requestBody:
         content:
@@ -26,10 +26,10 @@ paths:
               $ref: '#/components/schemas/TaskDTO'
       responses:
         '201':
-          description: Задача создана
+          description: Task created
   /api/tasks/{id}:
     get:
-      summary: Получить детали задачи
+      summary: Get details of task
       tags: [Tasks]
       parameters:
         - name: id
@@ -40,15 +40,15 @@ paths:
             format: uuid
       responses:
         '200':
-          description: Детали задачи
+          description: Task details
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Task'
         '404':
-          description: Задача не найдена
+          description: Task not found
     put:
-      summary: Обновить задачу
+      summary: Update task
       tags: [Tasks]
       parameters:
         - name: id
@@ -64,7 +64,7 @@ paths:
               $ref: '#/components/schemas/TaskDTO'
       responses:
         '200':
-          description: Задача обновлена
+          description: Task updated
 components:
   schemas:
     Task:

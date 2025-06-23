@@ -12,6 +12,4 @@ class UserRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, User::class);
     }
-
-    // Добавляй сюда свои кастомные методы запроса, если нужно
 }

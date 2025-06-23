@@ -1,0 +1,12 @@
+body {
+    background-color: #f8f9fa;
+}
+.kanban-column {
+    min-height: 200px;
+    background-color: #e9ecef;
+    padding: 10px;
+    border-radius: 5px;
+}
+.task-card {
+    margin-bottom: 10px;
+}

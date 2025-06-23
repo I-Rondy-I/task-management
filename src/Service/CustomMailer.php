@@ -6,13 +6,17 @@ use FOS\UserBundle\Model\UserInterface;
 
 class CustomMailer implements MailerInterface
 {
+    /**
+     * @return void
+     */
     public function sendConfirmationEmailMessage(UserInterface $user): void
     {
-        // Реализация отправки email
     }
 
+    /**
+     * @return void
+     */
     public function sendResettingEmailMessage(UserInterface $user): void
     {
-        // Реализация отправки email
     }
 }

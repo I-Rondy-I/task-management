@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="container mt-5">
+        <h2>Task details</h2>
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">{{ task.title }}</h5>
+                <p class="card-text"><strong>Description:</strong> {{ task.description }}</p>
+                <p class="card-text"><strong>Deadline:</strong> {{ task.deadline|date('Y-m-d H:i') }}</p>
+                <p class="card-text"><strong>Status:</strong> {{ task.status.value }}</p>
+                {% if task.parentTask %}
+                    <p class="card-text"><strong>Parent task:</strong> {{ task.parentTask.title }}</p>
+                {% endif %}
+                {% if task.subtasks|length > 0 %}
+                    <h6>SubTasks:</h6>
+                    <ul>
+                        {% for subtask in task.subtasks %}
+                            <li>{{ subtask.title }} ({{ subtask.status.value }})</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+                <a href="{{ path('task_edit', {'id': task.id}) }}" class="btn btn-warning">Modify</a>
+                <a href="{{ path('task_index') }}" class="btn btn-secondary">Back</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

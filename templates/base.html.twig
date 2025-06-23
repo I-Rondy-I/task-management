@@ -1,24 +1,44 @@
 <!DOCTYPE html>
-<html>
+<html lang="pl">
 <head>
-    <title>Task Management</title>
-    <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Task management{% endblock %}</title>
+    <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
+    {% block stylesheets %}
+    {% endblock %}
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="{{ path('task_index') }}">Task Management</a>
-    <div class="navbar-nav">
-        <a class="nav-link" href="{{ path('task_index') }}">Tasks</a>
-        <a class="nav-link" href="{{ path('task_kanban') }}">Kanban</a>
-        <a class="nav-link" href="{{ path('fos_user_security_logout') }}">Logout</a>
+    <div class="container-fluid">
+        <a class="navbar-brand" href="{{ path('task_index') }}">Task management</a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav ms-auto">
+                {% if app.user %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('task_kanban') }}">Kanban</a>
+                    </li>
+                    <li class="nav-item">
+                        {# Poprawiona trasa wylogowania #}
+                        <a class="nav-link" href="{{ path('fos_user_security_logout') }}">Logout</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('fos_user_security_login') }}">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('fos_user_registration_register') }}">Register</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
     </div>
 </nav>
-<div class="container">
+<main class="container mt-4">
     {% block body %}{% endblock %}
-</div>
-<script src="{{ asset('js/bootstrap.min.js') }}"></script>
-<script src="{{ asset('js/sortable.js') }}"></script>
-<script src="{{ asset('js/kanban.js') }}"></script>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+{% block javascripts %}
+{% endblock %}
 </body>
 </html>

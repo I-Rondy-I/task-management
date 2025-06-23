@@ -23,4 +23,9 @@ services:
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
     App\Service\CustomMailer:
+        #arguments:
+           # $fromEmail: '%fos_user.from_email.address%'
         tags: [ 'fos_user.mailer' ]
+
+    App\Serializer\TaskSerializer:
+        tags: [ 'serializer.normalizer' ]

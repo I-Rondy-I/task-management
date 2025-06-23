@@ -29,7 +29,7 @@ final class Version20250615101026 extends AbstractMigration
             )
         ');
 
-        // Tabela `user` z UUID
+        // Tabela `user`
         $this->addSql('
             CREATE TABLE user (
                 id BINARY(16) NOT NULL,
@@ -43,7 +43,7 @@ final class Version20250615101026 extends AbstractMigration
                 last_login DATETIME DEFAULT NULL,
                 confirmation_token VARCHAR(180) DEFAULT NULL,
                 password_requested_at DATETIME DEFAULT NULL,
-                roles JSON NOT NULL,
+                roles TEXT NOT NULL,
                 UNIQUE INDEX UNIQ_USER_USERNAME (username),
                 UNIQUE INDEX UNIQ_USER_USERNAME_CANONICAL (username_canonical),
                 UNIQUE INDEX UNIQ_USER_EMAIL (email),
